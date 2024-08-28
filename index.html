@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Macondo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@100..900&family=Macondo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+body.dark-mode {
+    
+    background-color: black;
+}
+
+header.dark-mode {
+    background: linear-gradient(135deg, #000000, #2c3130); 
+}
+
+#app.dark-mode {
+    background-color: #1e1e1e;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+#dark-mode-toggle {
+    width: 30%;
+    background-color: transparent;
+    border: none;
+}
+
+img {
+    width: 100%;
+}
+
+.flashcard.dark-mode {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+    color: #000000; 
+}
+
+.loading-spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#search-bar {
+    margin-top: 4%;
+    width: 80%;
+    justify-content: center;
+    justify-items: center;
+    margin-left: 7%;
+    padding: 10px 0px 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: "Bebas Neue", sans-serif;
+}
+
+#app {
+    max-width: 600px;
+    margin: 10% 8%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 0px;
+    font-family: "Macondo", cursive;
+    border-radius: 8px;
+}
+
+header p {
+    font-family: "Bebas Neue", sans-serif;
+    color: #ccc;
+    transition: 0.3s;
+}
+
+header p:hover {
+    color: #656363;
+}
+
+#flashcard-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+#flashcard-form input {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: "Bebas Neue", sans-serif;
+    transition: 0.3s;
+}
+
+#flashcard-form input:hover {
+    transform: scale(1.05);
+}
+
+.flashcard {
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensures long words break onto the next line */
+}
+
+.flashcard .term, .flashcard .translation {
+    font-size: 18px;
+    margin-bottom: 10px;
+    overflow-wrap: break-word; /* Allows long words to wrap to the next line */
+}
+
+#flashcards-list .flashcard {
+    max-width: 100%; /* Makes sure the card doesn’t exceed the container width */
+}
+
+#flashcard-form button {
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-family: "Exo 2", sans-serif;
+}
+
+#flashcard-form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.03);   
+    font-weight: 800;
+}
+
+#flashcards-list .flashcard {
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.flashcard .term, .flashcard .translation {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.flashcard button {
+    margin-right: 10px;
+    margin-bottom: 2%;
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.flashcard button:hover {
+    background-color: #0056b3;
+}
+
+.flashcard img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+#start-quiz{
+    background-color: gold;
+    font-size: large;
+    margin-bottom: 5%;
+    border: none;
+    padding: 3% 10%;
+    border-radius: 15px;
+    font-weight: 700;
+    margin-top: 5%;
+}
+
+#quiz-section {
+    font-weight: 700;
+}
+#show-answer{
+    background-color: rgb(255, 0, 0);
+    border: none;
+    padding: 3% 3%;
+    border-radius: 15px;
+    font-weight: 700;
+    margin-top: 5%;
+}
+#next-question{
+    background-color: lightgreen;
+    border: none;
+    padding: 3% 3%;
+    border-radius: 15px;
+    font-weight: 700;
+    margin-top: 5%;
+}
+footer {
+    background-color: #34495e;
+    color: white;
+    padding: 10% 0%;
+    text-align: center;
+    margin: 0%;   
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-content p {
+    margin: 1% 0%;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+footer nav {
+    display: flex;
+    gap: 20px;
+}
+
+footer nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    margin-top: 15%;
+}
+
+footer nav a:hover {
+    color: #3498db;
+    transform: scale(1.2);
+}
+.flashcard img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <input type="text" id="search-bar" placeholder="Search flashcards...">
+    <div id="app">
+        <button id="dark-mode-toggle"><img src="img/idea.png" alt="lightbulb"></button> <!-- Ensure ID matches -->
+        <header>
+            <h1>Flashcards</h1>
+            <p>Enter a word in English and its translation in German.</p>
+        </header>
+        <form id="flashcard-form">
+            <input type="text" id="term" placeholder="English Word" required>
+            <input type="text" id="translation" placeholder="German Translation" required>
+            <button type="submit">Add Flashcard</button>
+        </form>
+        
+        <div id="flashcards-list"></div>
+        <button id="start-quiz">Start Quiz</button>
+        <div id="points-display">Points: 0</div>
+
+<div id="quiz-section" style="display: none;">
+    <div id="quiz-card"></div>
+    <button id="show-answer">Show Answer</button>
+    <button id="next-question">Next Question</button>
+</div>
+    </div>
+    
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Glorious Flashcards. All rights reserved.</p>
+            <nav>
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </footer>
+    <script src="script.js">
+        const images = {
+    apple: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg",
+    banana: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
+    dog: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Golden_Retriever_1.jpg",
+    cat: "https://upload.wikimedia.org/wikipedia/commons/a/a3/June_odd-eyed-cat.jpg",
+    car: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Car.jpg",
+};
+
+
+
+
+document.getElementById("flashcard-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const term = document.getElementById("term").value.trim().toLowerCase();
+    const translation = document.getElementById("translation").value.trim().toLowerCase();
+
+    if (term && translation) {
+        const flashcard = document.createElement("div");
+        flashcard.classList.add("flashcard");
+
+        const termElem = document.createElement("div");
+        termElem.classList.add("term");
+        termElem.textContent = term;
+
+        const translationElem = document.createElement("div");
+        translationElem.classList.add("translation");
+        translationElem.textContent = translation;
+
+        flashcard.appendChild(termElem);
+        flashcard.appendChild(translationElem);
+
+        // Check if the term has an associated image
+        if (images[term]) {
+            const imgElem = document.createElement("img");
+            imgElem.src = images[term];
+            imgElem.alt = term;
+            flashcard.appendChild(imgElem);
+        }
+
+        const buttonsElem = document.createElement("div");
+
+        const speakButton = document.createElement("button");
+        speakButton.textContent = "Speak";
+        speakButton.classList.add("speak");
+        speakButton.addEventListener("click", function() {
+            readOutLoud(term, translation);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", function() {
+            flashcard.remove();
+        });
+
+        buttonsElem.appendChild(speakButton);
+        buttonsElem.appendChild(deleteButton);
+        flashcard.appendChild(buttonsElem);
+
+        document.getElementById("flashcards-list").appendChild(flashcard);
+
+        document.getElementById("term").value = "";
+        document.getElementById("translation").value = "";
+    }
+});
+
+function readOutLoud(term, translation) {
+    const utteranceTerm = new SpeechSynthesisUtterance(`English: ${term}`);
+    const utteranceTranslation = new SpeechSynthesisUtterance(`German: ${translation}`);
+    
+    utteranceTerm.lang = 'en-US';
+    utteranceTranslation.lang = 'de-DE';
+    
+    utteranceTerm.pitch = 1.1;
+    utteranceTerm.rate = 0.9;
+    utteranceTerm.volume = 1;
+    
+    utteranceTranslation.pitch = 1.1;
+    utteranceTranslation.rate = 0.9;
+    utteranceTranslation.volume = 1;
+    
+    const voices = speechSynthesis.getVoices();
+    utteranceTerm.voice = voices.find(voice => voice.lang === 'en-US' && voice.name.includes('Google')) || voices[0];
+    utteranceTranslation.voice = voices.find(voice => voice.lang === 'de-DE' && voice.name.includes('Google')) || voices[0];
+    
+    speechSynthesis.speak(utteranceTerm);
+    speechSynthesis.speak(utteranceTranslation);
+}
+document.getElementById('search-bar').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+
+    document.querySelectorAll('.flashcard').forEach(card => {
+        const termElem = card.querySelector('.term');
+        const translationElem = card.querySelector('.translation');
+
+        if (termElem && translationElem) {
+            const term = termElem.textContent.toLowerCase();
+            const translation = translationElem.textContent.toLowerCase();
+
+            if (term.includes(query) || translation.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
+});
+document.getElementById("dark-mode-toggle").addEventListener("click", function() {
+    document.body.classList.toggle("dark-mode");
+
+    document.querySelectorAll('.flashcard').forEach(card => {
+        card.classList.toggle("dark-mode");
+    });
+});
+const startQuizBtn = document.getElementById('start-quiz');
+const quizSection = document.getElementById('quiz-section');
+const quizCard = document.getElementById('quiz-card');
+const showAnswerBtn = document.getElementById('show-answer');
+const nextQuestionBtn = document.getElementById('next-question');
+
+let flashcards = []; // Store flashcards here
+let currentCardIndex = 0;
+
+startQuizBtn.addEventListener('click', function() {
+    flashcards = Array.from(document.querySelectorAll('.flashcard'));
+    currentCardIndex = 0;
+    showQuizCard();
+    quizSection.style.display = 'block';
+});
+
+showAnswerBtn.addEventListener('click', function() {
+    const translationElem = flashcards[currentCardIndex].querySelector('.translation');
+    quizCard.textContent = `Answer: ${translationElem.textContent}`;
+});
+
+nextQuestionBtn.addEventListener('click', function() {
+    currentCardIndex++;
+    if (currentCardIndex >= flashcards.length) {
+        currentCardIndex = 0; // Restart the quiz
+    }
+    showQuizCard();
+});
+
+function showQuizCard() {
+    const termElem = flashcards[currentCardIndex].querySelector('.term');
+    quizCard.textContent = `Question: What is the translation for "${termElem.textContent}"?`;
+}
+
+
+let points = 0;
+
+nextQuestionBtn.addEventListener('click', function() {
+    const translationElem = flashcards[currentCardIndex].querySelector('.translation');
+    if (quizCard.textContent.includes(translationElem.textContent)) {
+        points += 10;
+    }
+    updatePointsDisplay();
+});
+
+function updatePointsDisplay() {
+    document.getElementById('points-display').textContent = `Points: ${points}`;
+}
+function checkForBadges() {
+    if (points >= 100 && !document.getElementById('badge-100')) {
+        const badge = document.createElement('div');
+        badge.id = 'badge-100';
+        badge.textContent = '🏅 100 Points Badge!';
+        document.getElementById('quiz-section').appendChild(badge);
+    }
+}
+
+function updatePointsDisplay() {
+    document.getElementById('points-display').textContent = `Points: ${points}`;
+    checkForBadges();
+}
+
+    </script>
+    
+</body>
+</html>
